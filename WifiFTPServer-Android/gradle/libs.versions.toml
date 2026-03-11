@@ -14,7 +14,7 @@ coroutines = "1.8.1"
 minioFtp = "1.1.4"
 apacheFtpserver = "1.2.0"
 apacheMina = "2.2.3"
-slf4j = "2.0.13"
+slf4j = "1.7.36"
 icons = "1.7.0"
 
 [libraries]
