@@ -8,11 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: WifiFTPServer-Android
+
     steps:
       - uses: actions/checkout@v4
-
-      - name: Show directory structure
-        run: find . -maxdepth 3 -not -path './.git/*' | sort
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -32,5 +33,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wifi-ftp-server-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: WifiFTPServer-Android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
