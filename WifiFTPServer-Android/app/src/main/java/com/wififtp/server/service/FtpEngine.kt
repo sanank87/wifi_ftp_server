@@ -12,6 +12,7 @@ import org.apache.ftpserver.listener.ListenerFactory
 import org.apache.ftpserver.usermanager.impl.BaseUser
 import org.apache.ftpserver.usermanager.impl.WritePermission
 import java.io.File
+import org.apache.ftpserver.FtpServer
 
 private const val TAG = "FtpEngine"
 
