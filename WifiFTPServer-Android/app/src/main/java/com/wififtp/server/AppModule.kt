@@ -3,25 +3,25 @@ package com.wififtp.server
 import android.content.Context
 import androidx.room.Room
 import com.wififtp.server.data.AppDatabase
+import com.wififtp.server.data.SettingsRepository
 import com.wififtp.server.data.TransferLogDao
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.wififtp.server.service.FtpEngine
 
-@Module
-@InstallIn(SingletonComponent::class)
 object AppModule {
+    private var db: AppDatabase? = null
 
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext ctx: Context): AppDatabase =
-        Room.databaseBuilder(ctx, AppDatabase::class.java, "ftp_server_db")
+    fun provideDatabase(ctx: Context): AppDatabase {
+        return db ?: Room.databaseBuilder(ctx, AppDatabase::class.java, "ftp_server_db")
             .fallbackToDestructiveMigration()
-            .build()
+            .build().also { db = it }
+    }
 
-    @Provides
-    fun provideTransferLogDao(db: AppDatabase): TransferLogDao = db.transferLogDao()
+    fun provideTransferLogDao(ctx: Context): TransferLogDao =
+        provideDatabase(ctx).transferLogDao()
+
+    fun provideFtpEngine(ctx: Context): FtpEngine =
+        FtpEngine(provideTransferLogDao(ctx))
+
+    fun provideSettingsRepository(ctx: Context): SettingsRepository =
+        SettingsRepository(ctx)
 }
