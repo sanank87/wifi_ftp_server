@@ -162,7 +162,7 @@ class FtpEngine(private val transferLogDao: TransferLogDao) {
     // ── Stop FTP Server ───────────────────────────────────────────────────
     fun stop() {
         try {
-            ftpServer?.stop()
+            ftpServer?.let { if (!it.isStopped) it.stop() }
             ftpServer = null
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping server", e)
