@@ -6,22 +6,16 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.apache.ftpserver.FtpServer
 import org.apache.ftpserver.FtpServerFactory
 import org.apache.ftpserver.ftplet.*
 import org.apache.ftpserver.listener.ListenerFactory
 import org.apache.ftpserver.usermanager.impl.BaseUser
 import org.apache.ftpserver.usermanager.impl.WritePermission
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val TAG = "FtpEngine"
 
-@Singleton
-class FtpEngine @Inject constructor(
-    private val transferLogDao: TransferLogDao,
-) {
+class FtpEngine(private val transferLogDao: TransferLogDao) {
     private var ftpServer: FtpServer? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
