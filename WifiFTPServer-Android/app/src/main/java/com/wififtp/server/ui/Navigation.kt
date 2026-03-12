@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.wififtp.server.ui.screens.*
 import com.wififtp.server.ui.theme.*
 import kotlinx.coroutines.launch
+import androidx.compose.ui.unit.dp
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector, val badgeCount: Int = 0) {
     object Dashboard : Screen("dashboard", "Dashboard", Icons.Default.Home)
@@ -62,7 +63,7 @@ fun MainNavigation(viewModel: MainViewModel) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
 
-            NavigationBar(containerColor = BgCard, tonalElevation = 0.dp) {
+            NavigationBar(containerColor = BgCard, tonalElevation = androidx.compose.ui.unit.Dp(0f)) {
                 screens.forEach { screen ->
                     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
