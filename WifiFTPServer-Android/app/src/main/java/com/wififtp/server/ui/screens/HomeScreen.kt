@@ -187,7 +187,7 @@ fun HomeScreen(viewModel: MainViewModel) {
                     OutlinedButton(
                         onClick = { showQr = !showQr },
                         modifier = Modifier.weight(1f),
-                        colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = Primary),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary),
                         border = BorderStroke(1.dp, Primary.copy(alpha = 0.4f)),
                     ) {
                         Icon(Icons.Default.QrCode, null, Modifier.size(15.dp))
@@ -200,7 +200,7 @@ fun HomeScreen(viewModel: MainViewModel) {
                             viewModel.showSnackbar("URL copied!")
                         },
                         modifier = Modifier.weight(1f),
-                        colors = OutlinedButtonDefaults.outlinedButtonColors(contentColor = Primary),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Primary),
                         border = BorderStroke(1.dp, Primary.copy(alpha = 0.4f)),
                     ) {
                         Icon(Icons.Default.ContentCopy, null, Modifier.size(15.dp))
