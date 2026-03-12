@@ -5,13 +5,11 @@ import android.content.*
 import android.content.pm.ServiceInfo
 import android.os.*
 import androidx.core.app.NotificationCompat
+import com.wififtp.server.AppModule
 import com.wififtp.server.MainActivity
-import com.wififtp.server.R
-import com.wififtp.server.data.ServerConfig
 import com.wififtp.server.data.SettingsRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
 class FtpForegroundService : Service() {
     private lateinit var ftpEngine: FtpEngine
