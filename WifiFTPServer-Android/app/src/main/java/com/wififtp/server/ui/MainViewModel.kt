@@ -4,20 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.wififtp.server.data.*
 import com.wififtp.server.service.FtpEngine
 import com.wififtp.server.service.FtpForegroundService
 import com.wififtp.server.util.NetworkUtils
 import com.wififtp.server.util.QrUtils
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 
 data class UiState(
     val serverState: ServerState = ServerState(),
@@ -28,9 +23,9 @@ data class UiState(
     val isWifiConnected: Boolean = false,
 )
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+
+class MainViewModel(
+    private val context: Context,
     private val ftpEngine: FtpEngine,
     private val settingsRepo: SettingsRepository,
     private val transferLogDao: TransferLogDao,
@@ -140,4 +135,15 @@ class MainViewModelFactory(
         @Suppress("UNCHECKED_CAST")
         return MainViewModel(context, ftpEngine, settingsRepo, transferLogDao) as T
     }
+}
+
+class MainViewModelFactory(
+    private val context: Context,
+    private val ftpEngine: FtpEngine,
+    private val settingsRepo: SettingsRepository,
+    private val transferLogDao: TransferLogDao,
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        MainViewModel(context, ftpEngine, settingsRepo, transferLogDao) as T
 }
