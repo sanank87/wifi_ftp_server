@@ -8,27 +8,30 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import com.wififtp.server.ui.MainNavigation
 import com.wififtp.server.ui.MainViewModel
+import com.wififtp.server.ui.MainViewModelFactory
 import com.wififtp.server.ui.theme.WifiFTPServerTheme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(
+            application,
+            AppModule.provideFtpEngine(this),
+            AppModule.provideSettingsRepository(this),
+            AppModule.provideTransferLogDao(this),
+        )
+    }
 
     private val permissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { /* permissions handled — app works with available permissions */ }
+    ) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         requestPermissions()
-
         setContent {
             WifiFTPServerTheme {
                 MainNavigation(viewModel = viewModel)
@@ -45,13 +48,11 @@ class MainActivity : ComponentActivity() {
                 add(Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 add(Manifest.permission.READ_EXTERNAL_STORAGE)
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
             }
         }
-        if (permissions.isNotEmpty()) {
+        if (permissions.isNotEmpty())
             permissionsLauncher.launch(permissions.toTypedArray())
-        }
     }
 }
