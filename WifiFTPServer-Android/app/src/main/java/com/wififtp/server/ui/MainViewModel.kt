@@ -15,6 +15,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 
 data class UiState(
     val serverState: ServerState = ServerState(),
@@ -125,4 +128,16 @@ class MainViewModel @Inject constructor(
         _uiState.value.serverState.ipAddress,
         _uiState.value.serverState.port,
     )
+}
+
+class MainViewModelFactory(
+    private val context: android.content.Context,
+    private val ftpEngine: com.wififtp.server.service.FtpEngine,
+    private val settingsRepo: com.wififtp.server.data.SettingsRepository,
+    private val transferLogDao: com.wififtp.server.data.TransferLogDao,
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return MainViewModel(context, ftpEngine, settingsRepo, transferLogDao) as T
+    }
 }
