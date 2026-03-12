@@ -43,25 +43,25 @@ class FtpEngine @Inject constructor(
 
             // Authenticated user
             val user = BaseUser().apply {
-                name       = config.username
-                password   = config.password
+                name          = config.username
+                setPassword(config.password)
                 homeDirectory = rootDir.absolutePath
-                isEnabled  = true
-                authorities = listOf(WritePermission())
-                maxIdleTime = 300
+                authorities   = listOf(WritePermission())
+                maxIdleTime   = 300
             }
+            user.enabled = true
             userManager.save(user)
 
             // Anonymous user (optional)
             if (config.allowAnonymous) {
                 val anon = BaseUser().apply {
                     name          = "anonymous"
-                    password      = ""
+                    setPassword("")
                     homeDirectory = rootDir.absolutePath
-                    isEnabled     = true
                     authorities   = listOf(WritePermission())
                     maxIdleTime   = 120
                 }
+                anon.enabled = true
                 userManager.save(anon)
             }
 
@@ -201,15 +201,9 @@ class PropertiesUserManagerImpl : UserManager {
     override fun save(user: User) { users[user.name] = user }
     override fun doesExist(username: String) = users.containsKey(username)
     override fun authenticate(auth: Authentication): User? {
-        return when (auth) {
-            is UsernamePasswordAuthentication -> {
-                val user = users[auth.username] ?: return null
-                val storedPass = (user as? BaseUser)?.password ?: return null
-                if (storedPass == auth.password || auth.username == "anonymous") user else null
-            }
-            is AnonymousAuthentication -> users["anonymous"]
-            else -> null
-        }
+        val user = users[auth.username] ?: return null
+        val storedPass = (user as? BaseUser)?.getPassword() ?: return null
+        return if (storedPass == auth.password || auth.username == "anonymous") user else null
     }
     override fun getAdminName(): String = users.keys.firstOrNull() ?: "admin"
     override fun isAdmin(username: String): Boolean = username == getAdminName()
