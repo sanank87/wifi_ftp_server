@@ -126,18 +126,6 @@ class MainViewModel(
 }
 
 class MainViewModelFactory(
-    private val context: android.content.Context,
-    private val ftpEngine: com.wififtp.server.service.FtpEngine,
-    private val settingsRepo: com.wififtp.server.data.SettingsRepository,
-    private val transferLogDao: com.wififtp.server.data.TransferLogDao,
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return MainViewModel(context, ftpEngine, settingsRepo, transferLogDao) as T
-    }
-}
-
-class MainViewModelFactory(
     private val context: Context,
     private val ftpEngine: FtpEngine,
     private val settingsRepo: SettingsRepository,
