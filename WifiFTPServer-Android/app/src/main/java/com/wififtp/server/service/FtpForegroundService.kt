@@ -9,16 +9,13 @@ import com.wififtp.server.MainActivity
 import com.wififtp.server.R
 import com.wififtp.server.data.ServerConfig
 import com.wififtp.server.data.SettingsRepository
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class FtpForegroundService : Service() {
-
-    @Inject lateinit var ftpEngine: FtpEngine
-    @Inject lateinit var settingsRepo: SettingsRepository
+    private lateinit var ftpEngine: FtpEngine
+    private lateinit var settingsRepo: SettingsRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -37,6 +34,8 @@ class FtpForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        ftpEngine = AppModule.provideFtpEngine(this)
+        settingsRepo = AppModule.provideSettingsRepository(this)
         createNotificationChannel()
     }
 
