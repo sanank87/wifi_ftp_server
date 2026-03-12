@@ -15,6 +15,8 @@ import org.apache.ftpserver.usermanager.impl.WritePermission
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import org.apache.ftpserver.ftplet.AnonymousAuthentication
+import org.apache.ftpserver.ftplet.UsernamePasswordAuthentication
 
 private const val TAG = "FtpEngine"
 
@@ -201,9 +203,15 @@ class PropertiesUserManagerImpl : UserManager {
     override fun save(user: User) { users[user.name] = user }
     override fun doesExist(username: String) = users.containsKey(username)
     override fun authenticate(auth: Authentication): User? {
-        val user = users[auth.username] ?: return null
-        val storedPass = (user as? BaseUser)?.getPassword() ?: return null
-        return if (storedPass == auth.password || auth.username == "anonymous") user else null
+        if (auth is UsernamePasswordAuthentication) {
+            val user = users[auth.username] ?: return null
+            val storedPass = (user as? BaseUser)?.getPassword() ?: return null
+            return if (storedPass == auth.password || auth.username == "anonymous") user else null
+        }
+        if (auth is AnonymousAuthentication) {
+            return users["anonymous"]
+        }
+        return null
     }
     override fun getAdminName(): String = users.keys.firstOrNull() ?: "admin"
     override fun isAdmin(username: String): Boolean = username == getAdminName()
